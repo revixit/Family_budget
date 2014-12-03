@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+
+<body>
+
+    {% if periods %}
+        {% for period in periods %}
+            <a href="balance/{{ period.year_finalized }}/{{ period.month_finalized }}"> {{ period.month_str }} {{ period.year_finalized }}</a>
+        {% endfor %}
+    {% endif %}
+
+    <h4>Ежемесячные статьи</h4>
+    <ul>
+        {% if monthly_lines %}
+            {% for line in monthly_lines %}
+                <li>
+                    {{ line.kind }}
+                    {{ line.description }}
+                    {{ line.value }}
+                    {{ line.day_finalized }}
+                    <a href = 'delete/{{ line.id }}'>Удалить</a>
+                    <a href = 'change_line/{{ line.id }}'>Изменить</a>
+                </li>
+            {% endfor %}
+        {% else %}
+            Нет ежемесячных статей на этот месяц
+        {% endif %}
+    </ul>
+
+    <h4>Статьи на этот месяц</h4>
+    <ul>
+        {% if current_month_lines %}
+            {% for line in current_month_lines %}
+                <li>
+                    {{ line.kind }}
+                    {{ line.description }}
+                    {{ line.value }}
+                    {{ line.day_finalized }}
+                    <a href = 'delete/{{ line.id }}'>Удалить</a>
+                    <a href = 'change_line/{{ line.id }}'>Изменить</a>
+                </li>
+            {% endfor %}
+        {% else %}
+            Нет статей на этот месяц
+        {% endif %}
+    </ul>
+</body>
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load bootstrap_toolkit %}
+
+{% block content %}
+
+{#    dropdaown button to choice month and year #}
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+            Другой период
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            {% if periods %}
+                {% for period in periods %}
+                    <li role="presentation">
+                        <a role="menuitem" tabindex="-1" href="{% url 'balance' period.year_finalized period.month_finalized %}">
+                            {{ period.month_str }} {{ period.year_finalized }}
+                        </a>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+
+{#    заголовок с итоговой суммой #}
+    <h3>
+        {{ title }}<br>
+        {{ monthly_sum }} руб
+    </h3>
+
+{#    главная таблица на странице #}
+    <table class="table table-striped">
+
+        <tr>
+            <th>Описание</th>
+            <th>Тип</th>
+            <th>Сумма</th>
+            <th>Дата</th>
+            <th>Действие</th>
+        </tr>
+
+        <tr><td><h4>Ежемесячные статьи</h4></td></tr>
+
+        {% if monthly_lines %}
+            {% for line in monthly_lines %}
+                <tr>
+                    <td>{{ line.description }}</td>
+                    <td>{{ line.kind }}</td>
+                    <td>{{ line.value }}</td>
+                    <td>{{ line.day_finalized }}/{{ month }}/{{ year }}</td>
+                    <td>
+                        <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                            <a class="btn btn-danger" href='{% url 'delete_line' line.id %}'>Удалить</a>
+                            <a class="btn btn-primary" href='{% url 'change_line' line.id %}'>Изменить</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr> <td>Нет ежемесячных статей на этот месяц </td> </tr>
+        {% endif %}
+
+        <tr><td><h4>Статьи на текущий месяц</h4></td></tr>
+
+        {% if current_month_lines %}
+            {% for line in current_month_lines %}
+                <tr>
+                    <td>{{ line.description }}</td>
+                    <td>{{ line.kind }}</td>
+                    <td>{{ line.value }}</td>
+                    <td>{{ line.day_finalized }}/{{ month }}/{{ year }}</td>
+                    <td>
+                        <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                            <a class="btn btn-danger" href='{% url 'delete_line' line.id %}'>Удалить</a>
+                            <a class="btn btn-primary" href='{% url 'change_line' line.id %}'>Изменить</a>
+                        </div>
+                    </td>
+                  </tr>
+            {% endfor %}
+        {% else %}
+            <tr><td>Нет статей на этот месяц</td></tr>
+        {% endif %}
+    </table>
+    </div>
+
+{% endblock %}
